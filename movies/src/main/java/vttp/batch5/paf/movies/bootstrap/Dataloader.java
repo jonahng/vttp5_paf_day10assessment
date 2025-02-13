@@ -12,6 +12,7 @@ import java.util.Scanner;
 import java.util.zip.ZipInputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.json.Json;
@@ -22,13 +23,21 @@ import vttp.batch5.paf.movies.repositories.MongoMovieRepository;
 import vttp.batch5.paf.movies.repositories.MySQLMovieRepository;
 import vttp.batch5.paf.movies.services.LoadFileService;
 
-public class Dataloader {
+
+
+
+//please see LoadFileService in the service folder, it contains much of the code for task 2;
+public class Dataloader { //IMPLEMENTS COMMANDLINERUNNER to run
   @Autowired
+  //please see LoadFileService
   LoadFileService loadFileService;
   //LoadFileService is a java file i used, it is in the service folder to load the sql and mongo queries
 
 
   //TODO: Task 2
+  @Value("${filelocation}")
+    private String filelocation;
+    //Allow file location to be input
 
 
 
@@ -72,6 +81,8 @@ public void withLoop(String file) throws Exception{
               System.out.println("JSONOBJECT trying to read:" + jsonObject.getString("release_date"));
               LocalDate date = LocalDate.parse(jsonObject.getString("release_date"));
               System.out.println("LOCAL DATE PARSE:" + date.getYear());
+
+              //THIS FILTERS THOSE THAT ARE 2018 and higher
               if(date.getYear() > 2017){
                 //System.out.println("THIS ONE IS BEFORE 2018, ignore");
                 jsonList.add(jsonObject);

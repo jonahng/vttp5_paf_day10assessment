@@ -25,6 +25,8 @@ public class LoadFileService {
   @Autowired
   MySQLMovieRepository sqlRep;
 
+
+  //USE @Transactional to ensure all writes
   @Transactional
 public void writeToDatabases(List<JsonObject> jsonList){
   System.out.println("SERVICE: Trying to WRITING TO DATABASE: app writeToDatabases");
@@ -34,6 +36,7 @@ public void writeToDatabases(List<JsonObject> jsonList){
   } catch (Exception exception) {
     System.out.println("FAILED TO WRITE: firs item is" + jsonList.getFirst().toString());
     System.err.println(exception.getMessage());
+    mongoRep.logError(exception);
     throw exception;
   }
 

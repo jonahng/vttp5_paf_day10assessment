@@ -1,5 +1,7 @@
 package vttp.batch5.paf.movies.repositories;
 
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 import org.bson.Document;
@@ -62,6 +64,21 @@ MongoTemplate template;
  }
 
 
+  /* 
+            Query to Insert Document, values would be next to colons :
+            db.imdb.insert({
+            _id:,
+            imdb_id:,
+            title:,
+            directors:,
+            overview:,
+            tagline:,
+            genres:,
+            imdb_rating:,
+            imdb_votes:
+            })
+
+            */
  public void insertMovie(JsonObject j){
     JsonObject jo = Json.createObjectBuilder()
     .add("_id", j.getString("imdb_id"))
@@ -104,8 +121,25 @@ MongoTemplate template;
             timestamp: localTime,
             })
             */
- public void logError() {
+ public void logError(Exception exception) {
     //native mongo query is here
+    Date timestamp = new Date();
+    JsonObject jo = Json.createObjectBuilder()
+    .add("ids", "error id array")
+    .add("error", exception.getMessage())
+    .add("timestamp", timestamp.toString())
+    .build();
+    String jsonStr = jo.toString();
+   
+
+    try {
+        Document docToInsert = Document.parse(jsonStr);
+        Document result = template.insert(docToInsert, "imdb");
+    } catch (Exception e) {
+        System.out.println("Error has been logged");
+        // TODO: handle exception
+
+    }
  }
 
  // TODO: Task 3

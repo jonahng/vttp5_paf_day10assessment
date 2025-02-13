@@ -30,7 +30,7 @@ public class MainController {
   }
 
 
-  @GetMapping("/loadfile")
+/*   @GetMapping("/loadfile")
   public void loadFile(){
     Dataloader dataloader = new Dataloader();
     //dataloader.loadFile(null);
@@ -42,7 +42,7 @@ public class MainController {
       e.printStackTrace();
     }
 
-  }
+  } */
 
 
   @GetMapping("/top")
