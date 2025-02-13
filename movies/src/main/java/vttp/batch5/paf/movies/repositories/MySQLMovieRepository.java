@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import jakarta.json.JsonObject;
+import vttp.batch5.paf.movies.models.MovieFinance;
 
 @Repository
 public class MySQLMovieRepository {
@@ -54,6 +56,19 @@ public class MySQLMovieRepository {
 
   
   // TODO: Task 3
+
+  public MovieFinance getSpecificMovieDetails(String movieId){
+    SqlRowSet rs = template.queryForRowSet(SQLQueries.SQLGetSpecificMovieDetails,movieId);
+    MovieFinance mf = new MovieFinance();
+    while (rs.next()) {
+      
+      mf.setRevenue(rs.getInt("revenue"));
+      mf.setBudget(rs.getInt("budget"));
+    }
+    return mf;
+
+
+  }
 
 
 }

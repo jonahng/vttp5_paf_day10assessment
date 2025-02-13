@@ -1,11 +1,14 @@
 package vttp.batch5.paf.movies.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import vttp.batch5.paf.movies.models.MovieFinance;
+import vttp.batch5.paf.movies.models.TopDirectors;
 import vttp.batch5.paf.movies.repositories.MongoMovieRepository;
 import vttp.batch5.paf.movies.repositories.MySQLMovieRepository;
 
@@ -29,8 +32,24 @@ public class MovieService {
     //use the imdb ids to check sql for the total revenue and budget
     System.out.println("Trying to find prolific directors...");
     List<Document> highestDirectors = mongoRepo.getDirectorsWithMostMovies(5);
+    List<TopDirectors> topDirectorsData = new ArrayList<>();
     for(Document d : highestDirectors){
-      System.out.println("THE MOVIE IDS ARE:" + d.getList("movie_ids", String.class));
+      TopDirectors td = new TopDirectors();
+      td.setName(d.getString("_id"));
+      td.setMovie_count(d.getInteger("movies_count"));
+      //set the profit and revenue 
+
+      List<String> movieIds = d.getList("movie_ids", String.class);
+      for(String movieId: movieIds){
+        MovieFinance mFinance = sqlRepo.getSpecificMovieDetails(movieId);
+        //movie finance contains the revenue and budget for the movie
+        td.setRevenue(td.getRevenue() + mFinance.getRevenue());
+        td.setBudget(td.getBudget() + mFinance.getBudget());
+        //This adds the revenue and budget of each movie to the topdirector object
+      }
+      td.setProfitLoss(td.getRevenue() - td.getBudget());
+      //td.setrevenue(td.getRevenue + revenue)
+      //System.out.println("THE MOVIE IDS ARE:" + d.getList("movie_ids", String.class));
     }
 
 
