@@ -86,11 +86,12 @@ public class Dataloader {
     public void withLoop(String file) throws Exception{
         //List<Customer> customers = new ArrayList<>();
         try {
-            FileReader fr = new FileReader("/movies_post_2010.json");
+          System.out.println("TRYING TO READ FILE");
+            FileReader fr = new FileReader("C:\\Users\\65932\\vttp5_paf_day10a\\movies\\src\\main\\resources\\movies_post_2010.json");
             BufferedReader br = new BufferedReader(fr);
-            br.readLine(); //this discards the header first line
             String line;
             while(null != (line=br.readLine())){
+              System.out.println("LINE READ IS:" + line);
               JsonReader jsonReader = Json.createReader(new StringReader(line));
               JsonObject jsonObject = jsonReader.readObject();
               System.out.println("JSONOBJECT trying to read:" + jsonObject.toString());
