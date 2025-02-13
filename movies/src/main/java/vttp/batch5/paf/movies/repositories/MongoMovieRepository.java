@@ -12,6 +12,7 @@ import jakarta.json.JsonObject;
 
 @Repository
 public class MongoMovieRepository {
+
 @Autowired
 MongoTemplate template;
 
@@ -38,9 +39,18 @@ Query to Insert Document
   */
 
  public void batchInsertMovies(List<JsonObject> listOfJsonObjects) {
-    for(JsonObject jsonObject: listOfJsonObjects){
-        insertMovie(jsonObject);
+    System.out.println("TRYING TO BATCH INSERT MONGO");
+
+    try {
+        for(JsonObject jsonObject: listOfJsonObjects){
+            insertMovie(jsonObject);
+        }
+        
+    } catch (Exception e) {
+        // TODO: handle exception
+
     }
+
 
  }
 
@@ -55,11 +65,18 @@ Query to Insert Document
     .add("tagline",j.getString("tagline"))
     .add("genres", j.getString("genres"))
     .add("imdb_rating",j.getInt("imdb_rating"))
-    .add("imdb_votes",j.getString("imdb_votes"))
+    .add("imdb_votes",j.getInt("imdb_votes"))
     .build();
     String jsonStr = jo.toString();
-    Document docToInsert = Document.parse(jsonStr);
-    Document result = template.insert(docToInsert, "imdb");
+   
+
+    try {
+        Document docToInsert = Document.parse(jsonStr);
+        Document result = template.insert(docToInsert, "imdb");
+    } catch (Exception e) {
+        // TODO: handle exception
+
+    }
  } 
 
 

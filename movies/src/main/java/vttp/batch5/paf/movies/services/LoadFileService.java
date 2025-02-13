@@ -1,37 +1,24 @@
-package vttp.batch5.paf.movies.bootstrap;
+package vttp.batch5.paf.movies.services;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import java.util.zip.ZipInputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.json.Json;
-import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 import vttp.batch5.paf.movies.repositories.MongoMovieRepository;
 import vttp.batch5.paf.movies.repositories.MySQLMovieRepository;
-import vttp.batch5.paf.movies.services.LoadFileService;
 
-public class Dataloader {
-  @Autowired
-  LoadFileService loadFileService;
-  //LoadFileService is a java file i used, it is in the service folder to load the sql and mongo queries
-
-
-  //TODO: Task 2
-
-
-
+@Service
+public class LoadFileService {
   @Autowired
   MongoMovieRepository mongoRep;
 
@@ -98,5 +85,6 @@ public void withLoop(String file) throws Exception{
         }
 
     }
+
 
 }
