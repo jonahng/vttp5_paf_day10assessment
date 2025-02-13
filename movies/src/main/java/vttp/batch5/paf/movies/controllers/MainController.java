@@ -14,7 +14,13 @@ public class MainController {
   @GetMapping("loadfile")
   public void loadFile(){
     Dataloader dataloader = new Dataloader();
-    dataloader.loadFile(null);
+    //dataloader.loadFile(null);
+    try {
+      dataloader.withLoop("abc");
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
   }
 

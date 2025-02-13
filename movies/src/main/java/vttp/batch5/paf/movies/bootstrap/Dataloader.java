@@ -1,5 +1,7 @@
 package vttp.batch5.paf.movies.bootstrap;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -25,9 +27,9 @@ public class Dataloader {
             // TODO: handle exception
             System.out.println("cannot read file");
         }
+        
         Scanner sc = new Scanner(filInputStream);
         while (sc.hasNext()) {
-          
           JsonReader jsonReader = Json.createReader(new StringReader(sc.next()));
           JsonObject jsonObject = jsonReader.readObject();
           System.out.println("JSONOBJECT trying to read:" + jsonObject.toString());
@@ -36,8 +38,13 @@ public class Dataloader {
         JsonObject jsonObject = jsonReader.readObject();
         System.out.println("Trying to read file:" + jsonObject.toString());
          */
+      
+         //list of JsonObjects is created
 
 
+
+
+       
 
 
 
@@ -73,9 +80,42 @@ public class Dataloader {
         System.out.println("Trying to read file:/n:" + JsonReader.toString());
  */
 
+}
 
 
-  }
+    public void withLoop(String file) throws Exception{
+        //List<Customer> customers = new ArrayList<>();
+        try {
+            FileReader fr = new FileReader("/movies_post_2010.json");
+            BufferedReader br = new BufferedReader(fr);
+            br.readLine(); //this discards the header first line
+            String line;
+            while(null != (line=br.readLine())){
+              JsonReader jsonReader = Json.createReader(new StringReader(line));
+              JsonObject jsonObject = jsonReader.readObject();
+              System.out.println("JSONOBJECT trying to read:" + jsonObject.toString());
+        
+                //create your object, like customer or smth
+                //set the object to fields[1] etc on the object using object setters
+                //create list of the object, customers.add(customer)
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
+    }
+
+
+public void writeJsonToApp(){
+  //List of JsonObjects obtained
+   /* 
+   both inputs are jsonObjects
+   use while loops?
+    mongo repo write to mongo:
+    mysql repo write to sql
+    */
+}
+  
 
 
 }
