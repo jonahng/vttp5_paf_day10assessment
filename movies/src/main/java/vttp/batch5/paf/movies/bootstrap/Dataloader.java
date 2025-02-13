@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.zip.ZipInputStream;
 
@@ -40,15 +43,6 @@ public class Dataloader {
          */
       
          //list of JsonObjects is created
-
-
-
-
-       
-
-
-
-
 
 
 /*     ZipInputStream zipStream = null;
@@ -90,11 +84,30 @@ public class Dataloader {
             FileReader fr = new FileReader("C:\\Users\\65932\\vttp5_paf_day10a\\movies\\src\\main\\resources\\movies_post_2010.json");
             BufferedReader br = new BufferedReader(fr);
             String line;
-            while(null != (line=br.readLine())){
-              System.out.println("LINE READ IS:" + line);
+            int count = 0;
+
+            
+            List<JsonObject> jsonList = new ArrayList<>();
+
+            while((null != (line=br.readLine())) && count<10 ){
+              count +=1;
               JsonReader jsonReader = Json.createReader(new StringReader(line));
               JsonObject jsonObject = jsonReader.readObject();
-              System.out.println("JSONOBJECT trying to read:" + jsonObject.toString());
+              System.out.println("JSONOBJECT trying to read:" + jsonObject.getString("release_date"));
+              LocalDate date = LocalDate.parse(jsonObject.getString("release_date"));
+              System.out.println("LOCAL DATE PARSE:" + date.getYear());
+              if(date.getYear() < 2018){
+                System.out.println("THIS ONE IS BEFORE 2018, ignore");
+                jsonList.add(jsonObject);
+              }
+
+              if(jsonList.size() == 25){
+                //use the new transaction class to write the whole list?
+                jsonList.clear();
+              }
+              //if date > than 2018, add to list OK
+              //if list.size is 25, write it? write using a new class, with transactional?
+              //done in this while loop?
         
                 //create your object, like customer or smth
                 //set the object to fields[1] etc on the object using object setters
@@ -107,14 +120,9 @@ public class Dataloader {
     }
 
 
-public void writeJsonToApp(){
-  //List of JsonObjects obtained
-   /* 
-   both inputs are jsonObjects
-   use while loops?
-    mongo repo write to mongo:
-    mysql repo write to sql
-    */
+public void writeToDatabases(List<JsonObject> jsonList){
+
+  
 }
   
 
