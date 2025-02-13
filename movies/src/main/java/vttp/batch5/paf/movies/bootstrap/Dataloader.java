@@ -34,6 +34,16 @@ public class Dataloader { //IMPLEMENTS COMMANDLINERUNNER to run
   //LoadFileService is a java file i used, it is in the service folder to load the sql and mongo queries
 
 
+
+
+//NOTE FOR TASK 2, unable to read from zipped file, this app will read the unzipped file. Able to write data to sql and mongo database
+//insertions are done in batches of 25
+//transaction is used to rollback
+//
+
+
+
+
   //TODO: Task 2
   @Value("${filelocation}")
     private String filelocation;
@@ -47,14 +57,16 @@ public class Dataloader { //IMPLEMENTS COMMANDLINERUNNER to run
   @Autowired
   MySQLMovieRepository sqlRep;
 
+
+  //USE TRANSACTION TO ENSURE WRITE
   @Transactional
-public void writeToDatabases(List<JsonObject> jsonList){
+  public void writeToDatabases(List<JsonObject> jsonList){
   System.out.println("SERVICE: Trying to WRITING TO DATABASE: app writeToDatabases");
   try {
   mongoRep.batchInsertMovies(jsonList);
   sqlRep.batchInsertMovies(jsonList);
   } catch (Exception exception) {
-    System.out.println("FAILED TO WRITE: firs item is" + jsonList.getFirst().toString());
+    System.out.println("FAILED TO WRITE: first item is" + jsonList.getFirst().toString());
     System.err.println(exception.getMessage());
     throw exception;
   }
@@ -63,6 +75,8 @@ public void writeToDatabases(List<JsonObject> jsonList){
 
 
 public void withLoop(String file) throws Exception{
+        //this was used to read the file, filter the date to 2018
+        
         //List<Customer> customers = new ArrayList<>();
         try {
           System.out.println("TRYING TO READ FILE");

@@ -34,9 +34,15 @@ public void writeToDatabases(List<JsonObject> jsonList){
   mongoRep.batchInsertMovies(jsonList);
   sqlRep.batchInsertMovies(jsonList);
   } catch (Exception exception) {
+    //log errors 
+    List<String> errorIds = new ArrayList<>();
+    for(JsonObject jsonObject : jsonList){
+        errorIds.add(jsonObject.getString("imdb_id"));
+    }
+
     System.out.println("FAILED TO WRITE: firs item is" + jsonList.getFirst().toString());
     System.err.println(exception.getMessage());
-    mongoRep.logError(exception);
+    mongoRep.logError(exception, errorIds);
     throw exception;
   }
 

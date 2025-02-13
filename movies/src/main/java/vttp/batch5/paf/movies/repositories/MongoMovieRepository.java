@@ -57,6 +57,8 @@ MongoTemplate template;
         
     } catch (Exception e) {
         // TODO: handle exception
+        System.out.println("ERROR doing batch insert into mongo");
+
 
     }
 
@@ -99,14 +101,11 @@ MongoTemplate template;
         Document result = template.insert(docToInsert, "imdb");
     } catch (Exception e) {
         // TODO: handle exception
+        System.out.println("ERROR INSERTING MOVIE TO MONGO");
+
 
     }
  } 
-
-
-
-
-
 
  // TODO: Task 2.4
  // You can add any number of parameters and return any type from the method
@@ -121,11 +120,11 @@ MongoTemplate template;
             timestamp: localTime,
             })
             */
- public void logError(Exception exception) {
+ public void logError(Exception exception, List<String> errorIds) {
     //native mongo query is here
     Date timestamp = new Date();
     JsonObject jo = Json.createObjectBuilder()
-    .add("ids", "error id array")
+    .add("ids", errorIds.toString())
     .add("error", exception.getMessage())
     .add("timestamp", timestamp.toString())
     .build();
