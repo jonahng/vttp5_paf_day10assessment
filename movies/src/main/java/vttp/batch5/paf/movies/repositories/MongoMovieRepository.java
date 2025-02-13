@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
 
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+
 @Repository
 public class MongoMovieRepository {
 @Autowired
@@ -36,6 +39,22 @@ Query to Insert Document
  }
 
 
+ public void insertMovie(JsonObject j){
+    JsonObject jo = Json.createObjectBuilder()
+    .add("_id", j.getString("imdb_id"))
+    .add("imdb_id", j.getString("imdb_id"))
+    .add("title", j.getString("title"))
+    .add("director",j.getString("director"))
+    .add("overview",j.getString("overview"))
+    .add("tagline",j.getString("tagline"))
+    .add("genres", j.getString("genres"))
+    .add("imdb_rating",j.getInt("imdb_rating"))
+    .add("imdb_votes",j.getString("imdb_votes"))
+    .build();
+
+ }
+
+
 
 
 
@@ -54,7 +73,7 @@ Query to Insert Document
   })
   */
  public void logError() {
-    
+
 
  }
 
