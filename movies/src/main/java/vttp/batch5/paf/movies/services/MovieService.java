@@ -31,8 +31,9 @@ public class MovieService {
     //In mongo, use aggregation to get the number of movies for each director, and get the count. Also get an array of the IMDB ids for their movies
     //use the imdb ids to check sql for the total revenue and budget
     System.out.println("Trying to find prolific directors...");
-    List<Document> highestDirectors = mongoRepo.getDirectorsWithMostMovies(5);
+    List<Document> highestDirectors = mongoRepo.getDirectorsWithMostMovies(2);
     List<TopDirectors> topDirectorsData = new ArrayList<>();
+
     for(Document d : highestDirectors){
       TopDirectors td = new TopDirectors();
       td.setName(d.getString("_id"));
@@ -42,14 +43,22 @@ public class MovieService {
       List<String> movieIds = d.getList("movie_ids", String.class);
       for(String movieId: movieIds){
         MovieFinance mFinance = sqlRepo.getSpecificMovieDetails(movieId);
+        td.setRevenue(0);
+        td.setBudget(0);
         //movie finance contains the revenue and budget for the movie
         td.setRevenue(td.getRevenue() + mFinance.getRevenue());
         td.setBudget(td.getBudget() + mFinance.getBudget());
         //This adds the revenue and budget of each movie to the topdirector object
       }
       td.setProfitLoss(td.getRevenue() - td.getBudget());
+      //System.out.println("THE Topdirector data:" + td.toString());
+      topDirectorsData.add(td);
       //td.setrevenue(td.getRevenue + revenue)
       //System.out.println("THE MOVIE IDS ARE:" + d.getList("movie_ids", String.class));
+    }
+
+    for(TopDirectors topDirectors: topDirectorsData){
+      System.out.println("top director:" + topDirectors.toString());
     }
 
 

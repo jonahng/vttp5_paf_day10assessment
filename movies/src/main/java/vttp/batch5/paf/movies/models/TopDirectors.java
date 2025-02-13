@@ -12,6 +12,14 @@ public class TopDirectors {
     public TopDirectors() {
     }
     
+
+    @Override
+    public String toString() {
+        return "TopDirectors [name=" + name + ", movie_count=" + movie_count + ", revenue=" + revenue + ", budget="
+                + budget + ", profitLoss=" + profitLoss + "]";
+    }
+
+
     public String getName() {
         return name;
     }

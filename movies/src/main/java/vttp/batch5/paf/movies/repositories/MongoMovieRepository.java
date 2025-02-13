@@ -128,12 +128,12 @@ MongoTemplate template;
 public List<Document> getDirectorsWithMostMovies(int limit){
     GroupOperation groupByDirector = Aggregation.group("director")
     .count().as("movies_count").push("imdb_id").as("movie_ids");
-    
+
     SortOperation sortByMovieCount = Aggregation.sort(Sort.by(Direction.DESC,"movies_count"));
     LimitOperation limits = Aggregation.limit(limit);
     Aggregation pipeline = Aggregation.newAggregation(groupByDirector,sortByMovieCount,limits);
     AggregationResults<Document> results = template.aggregate(pipeline, "imdb",Document.class);
-
+    System.out.println("completed aggregation");
     return results.getMappedResults();
 }
 
