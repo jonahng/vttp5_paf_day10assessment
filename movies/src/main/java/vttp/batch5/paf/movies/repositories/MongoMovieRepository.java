@@ -4,7 +4,14 @@ import java.util.List;
 
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.aggregation.LimitOperation;
+import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.stereotype.Repository;
 
 import jakarta.json.Json;
@@ -23,20 +30,20 @@ MongoTemplate template;
  //
  //    native MongoDB query here
  /* 
-Query to Insert Document
-  db.imdb.insert({
-  _id:,
-  imdb_id:,
-  title:,
-  directors:,
-  overview:,
-  tagline:,
-  genres:,
-  imdb_rating:,
-  imdb_votes:
-  })
+            Query to Insert Document, values would be next to colons :
+            db.imdb.insert({
+            _id:,
+            imdb_id:,
+            title:,
+            directors:,
+            overview:,
+            tagline:,
+            genres:,
+            imdb_rating:,
+            imdb_votes:
+            })
 
-  */
+            */
 
  public void batchInsertMovies(List<JsonObject> listOfJsonObjects) {
     System.out.println("TRYING TO BATCH INSERT MONGO");
@@ -90,23 +97,44 @@ Query to Insert Document
  // Write the native Mongo query you implement in the method in the comments
  //
  //    native MongoDB query here
- /* 
-  db.errors.insert({
-  ids:,
-  error:,
-  timestamp:,
-  })
-  */
+            /* 
+            db.errors.insert({
+            ids:123,
+            error:errormessage,
+            timestamp: localTime,
+            })
+            */
  public void logError() {
-
-
+    //native mongo query is here
  }
 
  // TODO: Task 3
  // Write the native Mongo query you implement in the method in the comments
  //
  //    native MongoDB query here
- //
+            /* 
+            db.imdb.aggregate([
+            {$group:{
+                _id: "$director",
+                movies_count:{$sum:1},
+            }},
+            {$sort:{movies_count: -1}},
+            {$limit:5}
+
+            ])
+
+  */
+public List<Document> getDirectorsWithMostMovies(int limit){
+    GroupOperation groupByDirector = Aggregation.group("director").count().as("movies_count");
+    SortOperation sortByMovieCount = Aggregation.sort(Sort.by(Direction.DESC,"movies_count"));
+    LimitOperation limits = Aggregation.limit(limit);
+    Aggregation pipeline = Aggregation.newAggregation(groupByDirector,sortByMovieCount,limits);
+    AggregationResults<Document> results = template.aggregate(pipeline, "imdb",Document.class);
+
+    return results.getMappedResults();
+
+
+}
 
 
 }
