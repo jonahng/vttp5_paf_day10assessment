@@ -62,7 +62,7 @@ public class MySQLMovieRepository {
     MovieFinance mf = new MovieFinance();
     while (rs.next()) {
       
-      System.out.println("ONE PIECE OF REVENUE IS:" + rs.getDouble("revenue") );
+      //System.out.println("ONE PIECE OF REVENUE IS:" + rs.getDouble("revenue") );
       mf.setRevenue(rs.getDouble("revenue"));
       mf.setBudget(rs.getDouble("budget"));
     }

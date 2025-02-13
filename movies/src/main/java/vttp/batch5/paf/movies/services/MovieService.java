@@ -7,6 +7,7 @@ import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import vttp.batch5.paf.movies.models.DirectorResult;
 import vttp.batch5.paf.movies.models.MovieFinance;
 import vttp.batch5.paf.movies.models.TopDirectors;
 import vttp.batch5.paf.movies.repositories.MongoMovieRepository;
@@ -27,11 +28,11 @@ public class MovieService {
   // TODO: Task 3
   // You may change the signature of this method by passing any number of parameters
   // and returning any type
-  public void getProlificDirectors() {
+  public List<DirectorResult> getProlificDirectors(int limit) {
     //In mongo, use aggregation to get the number of movies for each director, and get the count. Also get an array of the IMDB ids for their movies
     //use the imdb ids to check sql for the total revenue and budget
     System.out.println("Trying to find prolific directors...");
-    List<Document> highestDirectors = mongoRepo.getDirectorsWithMostMovies(2);
+    List<Document> highestDirectors = mongoRepo.getDirectorsWithMostMovies(limit);
     List<TopDirectors> topDirectorsData = new ArrayList<>();
 
     for(Document d : highestDirectors){
@@ -57,9 +58,20 @@ public class MovieService {
       //System.out.println("THE MOVIE IDS ARE:" + d.getList("movie_ids", String.class));
     }
 
+    List<DirectorResult> resultsToReturn = new ArrayList<>();
+
     for(TopDirectors topDirectors: topDirectorsData){
-      System.out.println("top director:" + topDirectors.toString());
+      DirectorResult dr = new DirectorResult();
+      dr.setDirector_name(topDirectors.getName());
+      dr.setMovies_count(topDirectors.getMovie_count());
+      dr.setTotal_budget(topDirectors.getBudget());
+      dr.setTotal_revenue(topDirectors.getRevenue());
+      resultsToReturn.add(dr);
     }
+
+
+
+    return resultsToReturn;
 
 
   }
