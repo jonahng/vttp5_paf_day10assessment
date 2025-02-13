@@ -11,12 +11,22 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.zip.ZipInputStream;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
+import vttp.batch5.paf.movies.repositories.MongoMovieRepository;
+import vttp.batch5.paf.movies.repositories.MySQLMovieRepository;
 
 public class Dataloader {
+  @Autowired
+  MongoMovieRepository mongoRep;
+
+  @Autowired
+  MySQLMovieRepository sqlRep;
 
   //TODO: Task 2
   
@@ -89,20 +99,22 @@ public class Dataloader {
             
             List<JsonObject> jsonList = new ArrayList<>();
 
-            while((null != (line=br.readLine())) && count<10 ){
+            while((null != (line=br.readLine())) ){
               count +=1;
               JsonReader jsonReader = Json.createReader(new StringReader(line));
               JsonObject jsonObject = jsonReader.readObject();
               System.out.println("JSONOBJECT trying to read:" + jsonObject.getString("release_date"));
               LocalDate date = LocalDate.parse(jsonObject.getString("release_date"));
               System.out.println("LOCAL DATE PARSE:" + date.getYear());
-              if(date.getYear() < 2018){
-                System.out.println("THIS ONE IS BEFORE 2018, ignore");
+              if(date.getYear() > 2017){
+                //System.out.println("THIS ONE IS BEFORE 2018, ignore");
                 jsonList.add(jsonObject);
               }
 
               if(jsonList.size() == 25){
                 //use the new transaction class to write the whole list?
+                writeToDatabases(jsonList);
+
                 jsonList.clear();
               }
               //if date > than 2018, add to list OK
@@ -115,14 +127,23 @@ public class Dataloader {
             }
         } catch (Exception e) {
             // TODO: handle exception
+            System.out.println("problems writing");
         }
 
     }
 
 
+@Transactional
 public void writeToDatabases(List<JsonObject> jsonList){
+  System.out.println("Trying to WRITING TO DATABASE: app writeToDatabases");
+  try {
+  mongoRep.batchInsertMovies(jsonList);
+  sqlRep.batchInsertMovies(jsonList);
+  } catch (Exception exception) {
+    System.out.println("FAILED TO WRITE: firs item is" + jsonList.getFirst().toString());
+    throw exception;
+  }
 
-  
 }
   
 

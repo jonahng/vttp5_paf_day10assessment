@@ -27,6 +27,7 @@ public class MySQLMovieRepository {
     int added = template.update(SQLQueries.SQLInsert, j.getString("imdb_id"),
      j.getInt("vote_average"),j.getInt("vote_count"),j.getString("release_date"),
      j.getInt("revenue"),j.getInt("budget"),j.getInt("runtime"));
+     System.out.println("ADDED TO SQL:" + j.getString("imdb_id"));
   }
 
 

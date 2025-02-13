@@ -1,5 +1,8 @@
 package vttp.batch5.paf.movies.repositories;
 
+import java.util.List;
+
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
@@ -34,7 +37,10 @@ Query to Insert Document
 
   */
 
- public void batchInsertMovies() {
+ public void batchInsertMovies(List<JsonObject> listOfJsonObjects) {
+    for(JsonObject jsonObject: listOfJsonObjects){
+        insertMovie(jsonObject);
+    }
 
  }
 
@@ -51,8 +57,10 @@ Query to Insert Document
     .add("imdb_rating",j.getInt("imdb_rating"))
     .add("imdb_votes",j.getString("imdb_votes"))
     .build();
-
- }
+    String jsonStr = jo.toString();
+    Document docToInsert = Document.parse(jsonStr);
+    Document result = template.insert(docToInsert, "imdb");
+ } 
 
 
 
