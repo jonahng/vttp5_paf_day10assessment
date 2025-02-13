@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import vttp.batch5.paf.movies.bootstrap.Dataloader;
 import vttp.batch5.paf.movies.services.LoadFileService;
+import vttp.batch5.paf.movies.services.MovieService;
 
 @RestController
 @RequestMapping("")
@@ -14,8 +15,11 @@ public class MainController {
   @Autowired
   LoadFileService loadFileService;
 
+  @Autowired
+  MovieService movieService;
 
-  @GetMapping("loadfile")
+
+  @GetMapping("/loadfile")
   public void loadFile(){
     Dataloader dataloader = new Dataloader();
     //dataloader.loadFile(null);
@@ -27,6 +31,12 @@ public class MainController {
       e.printStackTrace();
     }
 
+  }
+
+
+  @GetMapping("/top")
+  public void getTopDirectors(){
+    movieService.getProlificDirectors();
   }
 
 
